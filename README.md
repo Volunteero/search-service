@@ -1,6 +1,6 @@
-# DevOpsEventGateway
+# Volunteero search service
 
-A Integration between external event emiters and devops tools
+An API to expose the search service of volenteero
 
 ## Install It
 ```
@@ -20,6 +20,10 @@ npm run dev
 npm run compile
 npm start
 ```
+
+#### Usage
+
+// TODO
 
 ### Try It
 * Point you're browser to [http://localhost:3000](http://localhost:3000)
