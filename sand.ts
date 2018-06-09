@@ -7,9 +7,10 @@ MessagingService.on('ready', () => {
     MessagingService.sendMessage({
         entities: [
             {
+                type: 'organization',
                 id: uuid(),
-                description: 'dsadasdasdqweqe12e12dsa',
-                name: 'Hello world!',
+                description: 'some world things',
+                name: 'Hello cool!',
                 time: Date.now()
             }
         ]

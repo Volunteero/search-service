@@ -3,22 +3,16 @@ import * as events from 'events';
 import * as uuid from 'uuid/v4';
 import { EntityType } from './entitiy-type';
 
-class SearchService extends events.EventEmitter {
+class SearchService {
 
     private client;
+    private indexName = 'volunteero-search';
     constructor(host: String) {
 
-        super();
         this.client = new es.Client({
             host,
             log: 'trace'
         });
-    }
-
-    async searchDescription() {
-
-        const result = await this.client.ping();
-        console.log(result);
     }
 
     private createEsParams(entities, mode: EntityType) {
@@ -27,7 +21,7 @@ class SearchService extends events.EventEmitter {
         entities.forEach(entity => {
 
             let moddedPush = {};
-            moddedPush[mode] = { _index: 'volunteero-search', _type: 'default', _id: entity.id };
+            moddedPush[mode] = { _index: this.indexName, _type: 'default', _id: entity.id };
             body.push(moddedPush);
 
             switch (mode) {
@@ -39,27 +33,76 @@ class SearchService extends events.EventEmitter {
                     break;
             }
         });
-        console.log(body);
         return { body };
     }
 
     async createEntities(entities) {
 
-        const result = await this.client.bulk(this.createEsParams(entities, EntityType.Create));
-        console.log(result);
+         await this.client.bulk(this.createEsParams(entities, EntityType.Create));
     }
 
     async updateEntities(entities) {
 
-        const result = await this.client.bulk(this.createEsParams(entities, EntityType.Update));
-        console.log(result);
+        await this.client.bulk(this.createEsParams(entities, EntityType.Update));
     }
 
     async deleteEntities(entities) {
 
-        const result = await this.client.bulk(this.createEsParams(entities, EntityType.Delete));
-        console.log(result);
+        await this.client.bulk(this.createEsParams(entities, EntityType.Delete));
+    }
+
+    async search(keywords: String[], type = 'any') {
+
+        let typedQuery = false;
+        let q = '';
+        // If there is a preferred entity type, enforce it
+        if (type !== 'any') {
+
+            typedQuery = true;
+            q += `type:${type}`;
+        }
+        // If we have keywords, add each one as filter for name and description
+        if (keywords.length > 0) {
+
+            if (typedQuery) {
+
+                q += ' AND (';
+            }
+            q += keywords.reduce((query, keyword) => {
+                query += ` description:${keyword} OR name:${keyword} OR`;
+                return query;
+            }, '');
+            q = q.substring(0, q.length - 3);
+            if (typedQuery) {
+
+                q += ')';
+            }
+        }
+        // Do the search
+        const result = await this.client.search({
+            index: this.indexName,
+            q
+        });
+        // Sort and split
+        const sortedAndCleaned = { events: [], campaigns: [], organizations: [] };
+        result.hits.hits
+            .sort((a, b) => a._score > b._score)
+            .map((hit) => hit._source)
+            .forEach(entity => {
+
+                switch (entity.type) {
+                    case 'event':
+                    case 'organization':
+                    case 'campaign':
+                        let copy = { ...entity };
+                        delete copy.type;
+                        sortedAndCleaned[entity.type + 's'].push(copy);
+                        break;
+                }
+
+            });
+        return sortedAndCleaned;
     }
 }
 
-export default new SearchService('http://ec2-52-59-200-135.eu-central-1.compute.amazonaws.com:9200');
+export default new SearchService('http://ec2-52-59-87-68.eu-central-1.compute.amazonaws.com:9200');

@@ -33,11 +33,10 @@ export default function (app: Application, routes: (app: Application) => void) {
 
     // Error handler to display the validation error as HTML
     app.use(function (err, req, res, next) {
-      res.status(err.status);
-      res.send(
-        '<h1>' + err.status + ' Error</h1>' +
-        '<pre>' + err.message + '</pre>'
-      );
+      res.status(err.status || 400).json({
+        status: err.status,
+        message: err.message.split('\n').join(' ')
+      });
     });
 
     routes(app);
