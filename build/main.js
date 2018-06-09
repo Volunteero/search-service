@@ -323,7 +323,7 @@ class ExpressServer {
 }
 exports.default = ExpressServer;
 
-/* WEBPACK VAR INJECTION */}.call(exports, "server\\common"))
+/* WEBPACK VAR INJECTION */}.call(exports, "server/common"))
 
 /***/ }),
 /* 8 */
@@ -404,7 +404,7 @@ function default_1(app, routes) {
 }
 exports.default = default_1;
 
-/* WEBPACK VAR INJECTION */}.call(exports, "server\\common\\swagger"))
+/* WEBPACK VAR INJECTION */}.call(exports, "server/common/swagger"))
 
 /***/ }),
 /* 15 */
