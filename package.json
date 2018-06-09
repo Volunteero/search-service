@@ -4,7 +4,7 @@
   "description": "Volunteero Search Service",
   "main": "index.js",
   "scripts": {
-    "start": "cd build && node main",
+    "start": "node build.js && cd build && node main",
     "compile": "node build.js && backpack build",
     "dev": "node build.js && backpack dev | pino -o 'short'",
     "test": "node build.js && mocha test/**/*.ts --exit"
