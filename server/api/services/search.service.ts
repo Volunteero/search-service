@@ -1,6 +1,4 @@
 import * as es from 'elasticsearch';
-import * as events from 'events';
-import * as uuid from 'uuid/v4';
 import { EntityType } from './entitiy-type';
 
 class SearchService {
@@ -38,17 +36,17 @@ class SearchService {
 
     async createEntities(entities) {
 
-         await this.client.bulk(this.createEsParams(entities, EntityType.Create));
+        return await this.client.bulk(this.createEsParams(entities, EntityType.Create));
     }
 
     async updateEntities(entities) {
 
-        await this.client.bulk(this.createEsParams(entities, EntityType.Update));
+        return await this.client.bulk(this.createEsParams(entities, EntityType.Update));
     }
 
     async deleteEntities(entities) {
 
-        await this.client.bulk(this.createEsParams(entities, EntityType.Delete));
+        return await this.client.bulk(this.createEsParams(entities, EntityType.Delete));
     }
 
     async search(keywords: String[], type = 'any') {

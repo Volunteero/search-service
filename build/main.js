@@ -121,17 +121,17 @@ class SearchService {
     }
     createEntities(entities) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.client.bulk(this.createEsParams(entities, entitiy_type_1.EntityType.Create));
+            return yield this.client.bulk(this.createEsParams(entities, entitiy_type_1.EntityType.Create));
         });
     }
     updateEntities(entities) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.client.bulk(this.createEsParams(entities, entitiy_type_1.EntityType.Update));
+            return yield this.client.bulk(this.createEsParams(entities, entitiy_type_1.EntityType.Update));
         });
     }
     deleteEntities(entities) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.client.bulk(this.createEsParams(entities, entitiy_type_1.EntityType.Delete));
+            return yield this.client.bulk(this.createEsParams(entities, entitiy_type_1.EntityType.Delete));
         });
     }
     search(keywords, type = 'any') {
@@ -316,14 +316,14 @@ class ExpressServer {
         return this;
     }
     listen(port = parseInt(process.env.PORT)) {
-        const welcome = port => () => logger_1.default.info(`up and running in ${"production" || 'development'} @: ${os.hostname()} on port: ${port}}`);
+        const welcome = port => () => logger_1.default.info(`up and running in ${"development" || 'development'} @: ${os.hostname()} on port: ${port}}`);
         http.createServer(app).listen(port, welcome(port));
         return app;
     }
 }
 exports.default = ExpressServer;
 
-/* WEBPACK VAR INJECTION */}.call(exports, "server/common"))
+/* WEBPACK VAR INJECTION */}.call(exports, "server\\common"))
 
 /***/ }),
 /* 8 */
@@ -366,53 +366,48 @@ module.exports = require("cookie-parser");
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(__dirname) {
+
 Object.defineProperty(exports, "__esModule", { value: true });
-const middleware = __webpack_require__(15);
-const path = __webpack_require__(1);
 function default_1(app, routes) {
-    middleware(path.join(__dirname, 'Api.yaml'), app, function (err, middleware) {
-        // Enable Express' case-sensitive and strict options
-        // (so "/entities", "/Entities", and "/Entities/" are all different)
-        app.enable('case sensitive routing');
-        app.enable('strict routing');
-        app.use(middleware.metadata());
-        app.use(middleware.files(app, {
-            apiPath: process.env.SWAGGER_API_SPEC,
-        }));
-        app.use(middleware.parseRequest({
-            // Configure the cookie parser to use secure cookies
-            cookie: {
-                secret: process.env.SESSION_SECRET
-            },
-            // Don't allow JSON content over 100kb (default is 1mb)
-            json: {
-                limit: process.env.REQUEST_LIMIT
-            }
-        }));
-        // These two middleware don't have any options (yet)
-        app.use(middleware.CORS(), middleware.validateRequest());
-        // Error handler to display the validation error as HTML
-        app.use(function (err, req, res, next) {
-            res.status(err.status || 400).json({
-                status: err.status,
-                message: err.message.split('\n').join(' ')
-            });
-        });
-        routes(app);
-    });
+    routes(app);
+    // middleware(path.join(__dirname, 'Api.yaml'), app, function(err, middleware) {
+    //   // Enable Express' case-sensitive and strict options
+    //   // (so "/entities", "/Entities", and "/Entities/" are all different)
+    //   app.enable('case sensitive routing');
+    //   app.enable('strict routing');
+    //   app.use(middleware.metadata());
+    //   app.use(middleware.files(app, {
+    //     apiPath: process.env.SWAGGER_API_SPEC,
+    //   }));
+    //   app.use(middleware.parseRequest({
+    //     // Configure the cookie parser to use secure cookies
+    //     cookie: {
+    //       secret: process.env.SESSION_SECRET
+    //     },
+    //     // Don't allow JSON content over 100kb (default is 1mb)
+    //     // json: {
+    //     //   limit: process.env.REQUEST_LIMIT
+    //     // }
+    //   }));
+    //   // These two middleware don't have any options (yet)
+    //   app.use(
+    //     middleware.CORS(),
+    //     middleware.validateRequest());
+    //   // Error handler to display the validation error as HTML
+    //   // app.use(function (err, req, res, next) {
+    //   //   res.status(err.status || 400).json({
+    //   //     status: err.status,
+    //   //     message: err.message.split('\n').join(' ')
+    //   //   });
+    //   // });
+    //   routes(app);
+    // });
 }
 exports.default = default_1;
 
-/* WEBPACK VAR INJECTION */}.call(exports, "server/common/swagger"))
 
 /***/ }),
-/* 15 */
-/***/ (function(module, exports) {
-
-module.exports = require("swagger-express-middleware");
-
-/***/ }),
+/* 15 */,
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -421,8 +416,8 @@ module.exports = require("swagger-express-middleware");
 Object.defineProperty(exports, "__esModule", { value: true });
 const pino = __webpack_require__(17);
 const l = pino({
-    name: process.env.APP_ID,
-    level: process.env.LOG_LEVEL,
+    name: process.env.APP_ID || 'SearchService',
+    level: process.env.LOG_LEVEL || 'trace',
 });
 exports.default = l;
 
@@ -566,8 +561,13 @@ exports.default = routes;
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __webpack_require__(0);
 const controller_1 = __webpack_require__(26);
+const entitiy_schema_1 = __webpack_require__(28);
+const input_validation_1 = __webpack_require__(32);
 exports.default = express.Router()
-    .get('/', controller_1.default.search);
+    .get('/', controller_1.default.search)
+    .post('/create', input_validation_1.validateInput(entitiy_schema_1.default, input_validation_1.ValidationScope.Body), controller_1.default.create)
+    .post('/update', input_validation_1.validateInput(entitiy_schema_1.default, input_validation_1.ValidationScope.Body), controller_1.default.update)
+    .post('/delete', input_validation_1.validateInput(entitiy_schema_1.default, input_validation_1.ValidationScope.Body), controller_1.default.delete);
 
 
 /***/ }),
@@ -601,6 +601,33 @@ class Controller {
             return res.status(200).json(Object.assign({}, searchResult));
         });
     }
+    create(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield search_service_1.default.createEntities(req.body.entities);
+            if (result.error) {
+                return res.status(400).json({ errors: result.errors });
+            }
+            return res.status(200).json({ success: true });
+        });
+    }
+    update(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield search_service_1.default.updateEntities(req.body.entities);
+            if (result.error) {
+                return res.status(400).json({ errors: result.errors });
+            }
+            return res.status(200).json({ success: true });
+        });
+    }
+    delete(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield search_service_1.default.deleteEntities(req.body.entities);
+            if (result.error) {
+                return res.status(400).json({ errors: result.errors });
+            }
+            return res.status(200).json({ success: true });
+        });
+    }
     static isValidInput(query = {}) {
         if (typeof query.type === 'undefined') {
             return {
@@ -629,6 +656,145 @@ Controller.allowedTypes = ['event', 'campaign', 'organization', 'any'];
 exports.Controller = Controller;
 exports.default = new Controller();
 
+
+/***/ }),
+/* 27 */,
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const event_schema_1 = __webpack_require__(29);
+const campaign_schema_1 = __webpack_require__(30);
+const organization_schema_1 = __webpack_require__(31);
+exports.default = {
+    id: 'identity',
+    type: 'object',
+    properties: {
+        entities: {
+            type: 'array',
+            items: {
+                anyOf: [
+                    event_schema_1.default,
+                    campaign_schema_1.default,
+                    organization_schema_1.default
+                ],
+                minItems: 1
+            }
+        }
+    },
+    required: ['entities']
+};
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    id: 'event',
+    type: 'object',
+    properties: {
+        id: { type: 'string' },
+        name: { type: 'string' },
+        description: { type: 'string' },
+        start: { type: 'string' },
+        end: { type: 'string' },
+        location: { type: 'string' },
+        category: { type: 'string' },
+        organization_id: { type: 'string' },
+        points: { type: 'number' },
+        volunteers: { type: 'number' },
+        available: { type: 'boolean' },
+    }
+};
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    id: 'campaign',
+    type: 'object',
+    properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        id: { type: 'string' },
+        influencePoints: { type: 'string' },
+        organizationId: { type: 'number' },
+    }
+};
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    id: 'organization',
+    type: 'object',
+    properties: {
+        id: { type: 'string' },
+        user_id: { type: 'string' },
+        organization_name: { type: 'string' },
+        organization_description: { type: 'string' },
+        influencePoints: {
+            type: 'array',
+            items: {
+                type: 'string'
+            }
+        },
+        campaign_ids: {
+            type: 'array',
+            items: {
+                type: 'string'
+            }
+        },
+    }
+};
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const jsonschema_1 = __webpack_require__(33);
+function validateInput(schema, scope = ValidationScope.Body) {
+    return function corsMiddleware(req, res, next) {
+        let result = jsonschema_1.validate(req.body, schema);
+        if (!result.valid) {
+            return res.status(400).json({ errors: result });
+        }
+        next();
+    };
+}
+exports.validateInput = validateInput;
+var ValidationScope;
+(function (ValidationScope) {
+    ValidationScope[ValidationScope["Body"] = 0] = "Body";
+    ValidationScope[ValidationScope["Query"] = 1] = "Query";
+})(ValidationScope = exports.ValidationScope || (exports.ValidationScope = {}));
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports) {
+
+module.exports = require("jsonschema");
 
 /***/ })
 /******/ ]);

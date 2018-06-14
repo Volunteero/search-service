@@ -19,6 +19,7 @@
     "express": "^4.16.2",
     "express-async-errors": "^3.0.0",
     "express-jsonschema": "^1.1.6",
+    "jsonschema": "^1.2.4",
     "pino": "^4.7.3",
     "source-map-support": "^0.4.15",
     "swagger-express-middleware": "^1.0.0-alpha.12",

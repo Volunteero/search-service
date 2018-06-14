@@ -12,4 +12,41 @@ paths:
       responses:
         200:
           description: Successful search result
+  /search/update:
+    post:
+      requestBody:
+        required: false
+        content:
+          application/json:
+      description: Update entitites
+      responses:
+        200:
+          description: Successful search result
+  /search/create:
+    post:
+      requestBody:
+        content:
+          application/application/json:
+            schema:
+              type: object
+              properties:
+                color:
+                  type: array
+                  items:
+                    type: string
+      description: Create entities
+      responses:
+        200:
+          description: Successful search result
+  /search/delete:
+    post:
+      requestBody:
+        required: false
+        content:
+          application/json:
+      description: Delete entities
+      responses:
+        200:
+          description: Successful search result
+  
 
