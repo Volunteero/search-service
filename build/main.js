@@ -62,7 +62,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,12 +73,6 @@ module.exports = require("express");
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-module.exports = require("path");
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -92,8 +86,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const es = __webpack_require__(21);
-const entitiy_type_1 = __webpack_require__(22);
+const es = __webpack_require__(20);
+const entitiy_type_1 = __webpack_require__(21);
 class SearchService {
     constructor(host) {
         this.indexName = 'volunteero-search';
@@ -186,10 +180,26 @@ exports.default = new SearchService('http://ec2-52-59-87-68.eu-central-1.compute
 
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(3);
+
+
+/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(4);
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(4);
+const server_1 = __webpack_require__(6);
+const routes_1 = __webpack_require__(23);
+const port = parseInt(process.env.PORT);
+exports.default = new server_1.default()
+    .router(routes_1.default)
+    .listen(port);
 
 
 /***/ }),
@@ -199,34 +209,18 @@ module.exports = __webpack_require__(4);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(5);
-const server_1 = __webpack_require__(7);
-const routes_1 = __webpack_require__(24);
-const port = parseInt(process.env.PORT);
-exports.default = new server_1.default()
-    .router(routes_1.default)
-    .listen(port);
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv = __webpack_require__(6);
+const dotenv = __webpack_require__(5);
 dotenv.config();
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports) {
 
 module.exports = require("dotenv");
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -240,19 +234,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(8);
+__webpack_require__(7);
 const express = __webpack_require__(0);
-const path = __webpack_require__(1);
+const path = __webpack_require__(8);
 const bodyParser = __webpack_require__(9);
 const http = __webpack_require__(10);
 const os = __webpack_require__(11);
 const cors = __webpack_require__(12);
 const cookieParser = __webpack_require__(13);
 const swagger_1 = __webpack_require__(14);
-const logger_1 = __webpack_require__(16);
-const messaging_service_1 = __webpack_require__(18);
-const search_service_1 = __webpack_require__(2);
-const cors_1 = __webpack_require__(23);
+const logger_1 = __webpack_require__(15);
+const messaging_service_1 = __webpack_require__(17);
+const search_service_1 = __webpack_require__(1);
+const cors_1 = __webpack_require__(22);
 const app = express();
 class ExpressServer {
     constructor() {
@@ -326,10 +320,16 @@ exports.default = ExpressServer;
 /* WEBPACK VAR INJECTION */}.call(exports, "server\\common"))
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-async-errors");
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+module.exports = require("path");
 
 /***/ }),
 /* 9 */
@@ -407,14 +407,13 @@ exports.default = default_1;
 
 
 /***/ }),
-/* 15 */,
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const pino = __webpack_require__(17);
+const pino = __webpack_require__(16);
 const l = pino({
     name: process.env.APP_ID || 'SearchService',
     level: process.env.LOG_LEVEL || 'trace',
@@ -423,13 +422,13 @@ exports.default = l;
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = require("pino");
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -443,8 +442,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const amqp = __webpack_require__(19);
-const events = __webpack_require__(20);
+const amqp = __webpack_require__(18);
+const events = __webpack_require__(19);
 class MessagingService extends events.EventEmitter {
     constructor(amqpUrl) {
         super();
@@ -489,25 +488,25 @@ exports.default = new MessagingService('amqp://qgoudwsq:vylnIAdpecjvnlHBBaq7yREu
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = require("amqplib");
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = require("events");
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = require("elasticsearch");
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -522,7 +521,7 @@ var EntityType;
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -538,13 +537,13 @@ exports.corsMiddleware = corsMiddleware;
 
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const router_1 = __webpack_require__(25);
+const router_1 = __webpack_require__(24);
 function routes(app) {
     app.use('/api/v1/search', router_1.default);
 }
@@ -553,25 +552,25 @@ exports.default = routes;
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __webpack_require__(0);
-const controller_1 = __webpack_require__(26);
-const entitiy_schema_1 = __webpack_require__(28);
-const input_validation_1 = __webpack_require__(32);
+const controller_1 = __webpack_require__(25);
+const entitiy_schema_1 = __webpack_require__(26);
+const input_validation_1 = __webpack_require__(30);
 exports.default = express.Router()
     .get('/', controller_1.default.search)
     .post('/create', input_validation_1.validateInput(entitiy_schema_1.default, input_validation_1.ValidationScope.Body), controller_1.default.create)
     .post('/update', input_validation_1.validateInput(entitiy_schema_1.default, input_validation_1.ValidationScope.Body), controller_1.default.update)
-    .post('/delete', input_validation_1.validateInput(entitiy_schema_1.default, input_validation_1.ValidationScope.Body), controller_1.default.delete);
+    .delete('/delete', input_validation_1.validateInput(entitiy_schema_1.default, input_validation_1.ValidationScope.Body), controller_1.default.delete);
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -585,7 +584,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const search_service_1 = __webpack_require__(2);
+const search_service_1 = __webpack_require__(1);
 class Controller {
     search(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -658,16 +657,15 @@ exports.default = new Controller();
 
 
 /***/ }),
-/* 27 */,
-/* 28 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const event_schema_1 = __webpack_require__(29);
-const campaign_schema_1 = __webpack_require__(30);
-const organization_schema_1 = __webpack_require__(31);
+const event_schema_1 = __webpack_require__(27);
+const campaign_schema_1 = __webpack_require__(28);
+const organization_schema_1 = __webpack_require__(29);
 exports.default = {
     id: 'identity',
     type: 'object',
@@ -689,7 +687,7 @@ exports.default = {
 
 
 /***/ }),
-/* 29 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -715,7 +713,7 @@ exports.default = {
 
 
 /***/ }),
-/* 30 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -728,14 +726,14 @@ exports.default = {
         name: { type: 'string' },
         description: { type: 'string' },
         id: { type: 'string' },
-        influencePoints: { type: 'string' },
-        organizationId: { type: 'number' },
+        influencePoints: { type: 'number' },
+        organizationId: { type: 'string' },
     }
 };
 
 
 /***/ }),
-/* 31 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -752,7 +750,7 @@ exports.default = {
         influencePoints: {
             type: 'array',
             items: {
-                type: 'string'
+                type: 'number'
             }
         },
         campaign_ids: {
@@ -766,13 +764,13 @@ exports.default = {
 
 
 /***/ }),
-/* 32 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const jsonschema_1 = __webpack_require__(33);
+const jsonschema_1 = __webpack_require__(31);
 function validateInput(schema, scope = ValidationScope.Body) {
     return function corsMiddleware(req, res, next) {
         let result = jsonschema_1.validate(req.body, schema);
@@ -791,7 +789,7 @@ var ValidationScope;
 
 
 /***/ }),
-/* 33 */
+/* 31 */
 /***/ (function(module, exports) {
 
 module.exports = require("jsonschema");

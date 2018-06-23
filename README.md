@@ -9,11 +9,12 @@ Hosted on Heroku as `volunteero-search`: https://volunteero-search.herokuapp.com
 **POST**: ``/create``  
 To index a new entity
 
-Example request body for indexing an organization / event / campaign. You can send more than one if needed and also different types. Although probably not needed in the entitiy per service case.    
+Example request body for indexing an event / campaign / organization. Add the type of entitiy to the entitiy as well. You can send more than one if needed and also different types. Although probably not needed in the entitiy per service case.    
 ```json
 {
 	"entities": [
 		{
+			"type": "campaign",
 			"name":"<name: string>",
 			"description":"<description: string>",
 			"id":"<id: string>",
@@ -21,6 +22,7 @@ Example request body for indexing an organization / event / campaign. You can se
 			"organizationId":"<organizationId: string>",
 		},
 		{
+			"type": "event",
 			"id":"<id: string>",
 			"name":"<name: string>",
 			"description":"<description: string>",
@@ -34,6 +36,7 @@ Example request body for indexing an organization / event / campaign. You can se
 			"available":"<available: boolean>",
 		},
 		{
+			"type": "organization",
 			"id": "<:string>",
 			"user_id": "<:string>",
 			"organization_name": "<:string>",

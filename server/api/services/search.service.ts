@@ -82,19 +82,22 @@ class SearchService {
             q
         });
         // Sort and split
-        const sortedAndCleaned = { events: [], campaigns: [], organizations: [] };
+        const sortedAndCleaned = { events: [], campaigns: [], organizations: [], other: [] };
         result.hits.hits
             .sort((a, b) => a._score > b._score)
             .map((hit) => hit._source)
             .forEach(entity => {
 
+                let copy = { ...entity };
                 switch (entity.type) {
                     case 'event':
                     case 'organization':
                     case 'campaign':
-                        let copy = { ...entity };
                         delete copy.type;
                         sortedAndCleaned[entity.type + 's'].push(copy);
+                        break;
+                    default:
+                        sortedAndCleaned.other.push(copy);
                         break;
                 }
 
