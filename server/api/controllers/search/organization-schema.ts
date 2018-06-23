@@ -9,7 +9,7 @@ export default {
         influencePoints: {
             type: 'array',
             items: {
-                type: 'string'
+                type: 'number'
             }
         },
         campaign_ids: {
