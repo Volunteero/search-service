@@ -1,7 +1,7 @@
 # Search Service  
 Provides search functionalities
 ## Internal  
-Build with `express` and `mongoose`   
+Build with `express` and `elastic search`   
 ## Hosting  
 Hosted on Heroku as `volunteero-search`: https://volunteero-search.herokuapp.com/api/v1/search
 ## Routes  
