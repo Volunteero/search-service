@@ -6,4 +6,4 @@ export default express.Router()
     .get('/', controller.search)
     .post('/create', validateInput(entitiySchema, ValidationScope.Body), controller.create)
     .post('/update', validateInput(entitiySchema, ValidationScope.Body), controller.update)
-    .post('/delete', validateInput(entitiySchema, ValidationScope.Body), controller.delete);
+    .delete('/delete', validateInput(entitiySchema, ValidationScope.Body), controller.delete);

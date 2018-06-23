@@ -5,7 +5,7 @@ export default {
         name: { type: 'string' },
         description: { type: 'string' },
         id: { type: 'string' },
-        influencePoints: { type: 'string' },
-        organizationId: { type: 'number' },
+        influencePoints: { type: 'number' },
+        organizationId: { type: 'string' },
     }
 };
